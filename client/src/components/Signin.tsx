@@ -1,14 +1,16 @@
 import React, { useState } from "react";
 import { signinUser } from "../services/auth";
+import { useNavigate } from "react-router-dom";
 
 interface SigninProps {
-  onSwitchToRegister: () => void; // Prop to switch to Register component
+  onSwitchToRegister: () => void; 
 }
 
 const Signin: React.FC<SigninProps> = ({ onSwitchToRegister }) => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
-  const [errorMessage, setErrorMessage] = useState<string>(""); // State to hold error messages
+  const [errorMessage, setErrorMessage] = useState<string>("");
+  const navigate = useNavigate();
 
   const handleSignin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -24,6 +26,7 @@ const Signin: React.FC<SigninProps> = ({ onSwitchToRegister }) => {
     try {
       const user = await signinUser(email, password);
       console.log("User successfully logged in:", user);
+      navigate("/home")
     } catch (error) {
       console.error("Login failed:", error);
       setErrorMessage("Incorrect email/password. Please try again.");

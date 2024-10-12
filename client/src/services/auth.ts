@@ -51,3 +51,18 @@ export const signoutUser = async () => {
 export const getCurrentUser = () => {
   return auth.currentUser;
 };
+
+export const getUserToken = async (): Promise<string | null> => {
+  const user = getCurrentUser();
+  if (user) {
+    try {
+      const token = await user.getIdToken();
+      return token;
+    } catch (error) {
+      console.error("Failed to get user token", error);
+      throw error;
+    }
+  } else {
+    return null; // No user signed in
+  }
+};
