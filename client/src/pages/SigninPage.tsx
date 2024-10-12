@@ -14,16 +14,16 @@ const SigninPage: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen">
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-200">
       {isSigningUp ? (
         <Register />
       ) : (
         <Signin onSwitchToRegister={handleSwitchToSignup} />
       )}
       {isSigningUp && (
-        <p>
-          Already have an account?
-          <button onClick={handleSwitchToSignin}>Sign In</button>
+        <p className="text-center text-gray-500 text-xs">
+          Already have an account? 
+          <button className="text-blue-500 hover:text-blue-800 ml-1" onClick={handleSwitchToSignin}>Sign In</button>
         </p>
       )}
     </div>
