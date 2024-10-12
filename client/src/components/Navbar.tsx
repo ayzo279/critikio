@@ -19,12 +19,12 @@ const Navbar: React.FC = () => {
     <div className="h-screen w-64 fixed top-0 left-0 bg-slate-800 shadow-md">
       <div className="flex-col flex items-center justify-center">
         <div className="text-white text-3xl font-bold p-8">critik.io</div>
-        <nav className="mt-10 w-full text-lg text-white font-light">
+        <nav className="mt-10 w-full text-md text-white font-light">
           <ul className="space-y-4 px-1">
             <li>
               <a
                 href="/home"
-                className={`flex space-x-3 py-3 pl-8 rounded-xl ${
+                className={`flex space-x-4 py-3 pl-8 rounded-xl ${
                   location.pathname === "/home" ? "bg-blue-700" : ""
                 }`}
               >
@@ -35,7 +35,7 @@ const Navbar: React.FC = () => {
             <li>
               <a
                 href="#"
-                className={`flex space-x-3 py-3 pl-8 rounded-xl ${
+                className={`flex space-x-4 py-3 pl-8 rounded-xl ${
                   location.pathname === "#" ? "bg-blue-700" : ""
                 }`}
               >
@@ -46,7 +46,7 @@ const Navbar: React.FC = () => {
             <li>
               <a
                 href="#"
-                className={`flex space-x-3 py-3 pl-8 rounded-xl ${
+                className={`flex space-x-4 py-3 pl-8 rounded-xl ${
                   location.pathname === "#" ? "bg-blue-700" : ""
                 }`}
               >
@@ -57,7 +57,7 @@ const Navbar: React.FC = () => {
             <li>
               <a
                 href="#"
-                className={`flex space-x-3 py-3 pl-8 rounded-xl ${
+                className={`flex space-x-4 py-3 pl-8 rounded-xl ${
                   location.pathname === "#" ? "bg-blue-700" : ""
                 }`}
               >

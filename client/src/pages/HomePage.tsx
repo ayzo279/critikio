@@ -1,11 +1,14 @@
 import React from 'react';
 import Navbar from '../components/Navbar';
+import { TabProvider } from '../contexts/TabContext';
 
 const HomePage: React.FC = () => {
   return (
-    <div>
-        <Navbar/>
-    </div>
+    <TabProvider>
+        <div>
+            <Navbar/>
+        </div>
+    </TabProvider>
 
   )
 }
