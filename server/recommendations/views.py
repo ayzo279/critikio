@@ -7,22 +7,32 @@ import os
 import random
 
 # Compute normalized Euclidean distance
-def compute_similarity(song1, song2, filters: dict[str, bool]):
+def compute_similarity(song1, song2, filters: dict[str, bool], weight=4):
     similarity = 0
-    defaults = ["tempo"]
+    defaults = ["tempo","acousticness","key","mode","liveness","loudness","time_signature"]
 
-    # Normalize tempo data between 0 and 1
-    song1["tempo"] = np.interp(song1["tempo"], [0, 200], [0, 1])
-    song2["tempo"] = np.interp(song2["tempo"], [0, 200], [0, 1])
+    # Normalize tempo data between 0 and 1, clip in case of outliers
+    song1["tempo"] = np.clip(np.interp(song1["tempo"], [0, 200], [0, 1]), 0, 1)
+    song2["tempo"] = np.clip(song2["tempo"], [0, 200], [0, 1]), 0, 1)
+
+    # Normalize key data 
+    song1["key"], song2["key"] = np.interp(song1["key"], [-1, 11], [0, 1]), np.interp(song2["key"], [-1, 11], [0, 1])
+
+    # Normalize loudness
+    song1["loudness"], song2["loudness"] = np.clip(np.interp(song1["loudness"], [-60, 0], [0, 1]), 0, 1), np.clip(np.interp(song2["loudness"], [-60, 0], [0, 1]), 0, 1)
+
+    # Normalize time signatures
+    song1["time_signature"], song2["time_signature"] = np.interp(song1["time_signature"], [3, 7], [0, 1]), np.interp(song2["signature"], [3, 7], [0, 1])
+
 
     # Calculate similarity using default features
     for default_feature in defaults:
         similarity += (song1[default_feature] - song2[default_feature]) ** 2
 
-    # Include selected features based on filters
+    # Include selected features based on filters, weighted more heavily for user preferences
     for feature in filters.keys():
         if filters[feature]:
-            similarity += (song1[feature] - song2[feature]) ** 2
+            similarity += weight * (song1[feature] - song2[feature]) ** 2
 
     # Return the square root of the summed differences (Euclidean distance)
     return np.sqrt(similarity)
