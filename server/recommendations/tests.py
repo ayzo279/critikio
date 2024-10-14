@@ -38,9 +38,9 @@ class RecommendationsTestCase(TestCase):
         self.assertLessEqual(similarity, 1.0)
 
     def test_get_recommendations(self):
-        song = "Shape of You"
-        artist = "Ed Sheeran"
-        artist_list = ["Billie Eilish"]
+        song = "Roxanne"
+        artist = "The Police"
+        artist_list = ["Bruno Mars"]
         filters = {
             "danceability": True,
             "valence": True
