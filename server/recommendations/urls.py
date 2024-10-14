@@ -1,7 +1,12 @@
 from django.contrib import admin
-from django.urls import path
-from .views import process_recommendations
+from django.urls import path, include
+
+from rest_framework.routers import DefaultRouter
+from .views import RecommendationViewSet
+
+router = DefaultRouter()
+router.register(r'recommendation', RecommendationViewSet)
 
 urlpatterns = [
-    path('api/recommendations/', process_recommendations, name='process-recommendations')
+    path('', include(router.urls)),
 ]

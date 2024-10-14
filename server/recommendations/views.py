@@ -6,34 +6,37 @@ from spotipy.oauth2 import SpotifyClientCredentials
 import os
 import random
 
-from rest_framework import status
+from rest_framework import status, viewsets
 from rest_framework.response import Response
-from rest_framework.decorators import api_view
+from rest_framework.decorators import action
 from .models import Recommendation
 from .serializers import RecommendationSerializer
 
+class RecommendationViewSet(viewsets.ModelViewSet):
+    queryset = Recommendation.objects.all()
+    serializer_class = RecommendationSerializer
 
-def process_recommendations(request):
-    reference_track = request.data.get('referenceTrack')
-    reference_artist = request.data.get('referenceArtist')
-    filters = request.data.get('toggles')
-    artists = request.data.get('badges')
+    @action(detail=False, methods=['post'])
+    def process_recommendations(self, request):  # Add `self` as the first parameter
+        reference_track = request.data.get('referenceTrack')
+        reference_artist = request.data.get('referenceArtist')
+        filters = request.data.get('toggles', {})
+        artists = request.data.get('badges', [])
 
-    recommended_songs = get_recommendations(reference_track, reference_artist, artists, filters)
+        recommended_songs = get_recommendations(reference_track, reference_artist, artists, filters)
 
-    rec_list = [song for song in recommended_songs.values()]
-    
-    recommendation = Recommendation(
-        song_name = reference_track,
-        artist_name = reference_artist,
-        recommended_songs=rec_list
-    )
+        rec_list = [song for song in recommended_songs.values()]
+        
+        recommendation = Recommendation(
+            song_name=reference_track,
+            artist_name=reference_artist,
+            recommended_songs=rec_list
+        )
+        recommendation.save()
 
-    recommendation.save()
+        serializer = RecommendationSerializer(recommendation)
 
-    serializer = RecommendationSerializer(recommendation)
-
-    return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
 # Compute normalized Euclidean distance
