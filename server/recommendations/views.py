@@ -6,6 +6,36 @@ from spotipy.oauth2 import SpotifyClientCredentials
 import os
 import random
 
+from rest_framework import status
+from rest_framework.response import Response
+from rest_framework.decorators import api_view
+from .models import Recommendation
+from .serializers import RecommendationSerializer
+
+
+def process_recommendations(request):
+    reference_track = request.data.get('referenceTrack')
+    reference_artist = request.data.get('referenceArtist')
+    filters = request.data.get('toggles')
+    artists = request.data.get('badges')
+
+    recommended_songs = get_recommendations(reference_track, reference_artist, artists, filters)
+
+    rec_list = [song for song in recommended_songs.values()]
+    
+    recommendation = Recommendation(
+        song_name = reference_track,
+        artist_name = reference_artist,
+        recommended_songs=rec_list
+    )
+
+    recommendation.save()
+
+    serializer = RecommendationSerializer(recommendation)
+
+    return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+
 # Compute normalized Euclidean distance
 def compute_similarity(song1, song2, filters: dict[str, bool], weight=4):
     similarity = 0
@@ -13,7 +43,7 @@ def compute_similarity(song1, song2, filters: dict[str, bool], weight=4):
 
     # Normalize tempo data between 0 and 1, clip in case of outliers
     song1["tempo"] = np.clip(np.interp(song1["tempo"], [0, 200], [0, 1]), 0, 1)
-    song2["tempo"] = np.clip(song2["tempo"], [0, 200], [0, 1]), 0, 1)
+    song2["tempo"] = np.clip(np.interp(song2["tempo"], [0, 200], [0, 1]), 0, 1)
 
     # Normalize key data 
     song1["key"], song2["key"] = np.interp(song1["key"], [-1, 11], [0, 1]), np.interp(song2["key"], [-1, 11], [0, 1])
