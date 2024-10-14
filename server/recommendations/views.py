@@ -41,7 +41,7 @@ class RecommendationViewSet(viewsets.ModelViewSet):
 
 # Compute normalized Euclidean distance
 def compute_similarity(song1, song2, filters: dict[str, bool], weight=4):
-    similarity = 0
+    dist = 0
     defaults = ["tempo","acousticness","key","mode","liveness","loudness","time_signature"]
 
     # Normalize tempo data between 0 and 1, clip in case of outliers
@@ -55,19 +55,21 @@ def compute_similarity(song1, song2, filters: dict[str, bool], weight=4):
     song1["loudness"], song2["loudness"] = np.clip(np.interp(song1["loudness"], [-60, 0], [0, 1]), 0, 1), np.clip(np.interp(song2["loudness"], [-60, 0], [0, 1]), 0, 1)
 
     # Normalize time signatures
-    song1["time_signature"], song2["time_signature"] = np.interp(song1["time_signature"], [3, 7], [0, 1]), np.interp(song2["signature"], [3, 7], [0, 1])
+    song1["time_signature"], song2["time_signature"] = np.interp(song1["time_signature"], [3, 7], [0, 1]), np.interp(song2["time_signature"], [3, 7], [0, 1])
 
 
     # Calculate similarity using default features
     for default_feature in defaults:
-        similarity += (song1[default_feature] - song2[default_feature]) ** 2
+        dist += (song1[default_feature] - song2[default_feature]) ** 2
 
     # Include selected features based on filters, weighted more heavily for user preferences
     for feature in filters.keys():
         if filters[feature]:
-            similarity += weight * (song1[feature] - song2[feature]) ** 2
+            dist += weight * (song1[feature] - song2[feature]) ** 2
 
-    # Return the square root of the summed differences (Euclidean distance)
+    max_dist = np.sqrt(len(defaults) + sum(weight for feature in filters if filters[feature]))
+
+    similarity = 1 - (dist/max_dist)
     return np.sqrt(similarity)
 
 def get_recommendations(song, artist, artist_list, filters, count=5):
