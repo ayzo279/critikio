@@ -1,0 +1,2 @@
+firestore==4.0.1
+axios==0.4.0
