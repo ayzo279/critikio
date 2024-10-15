@@ -34,7 +34,7 @@ class RecommendationViewSet(viewsets.ModelViewSet):
 
         rec_list = [song for song in recommended_songs.values()]
         
-        print(rec_list)
+        # print(rec_list)
         
         recommendation = Recommendation(
             referenceTrack=referenceTrack,
@@ -67,22 +67,21 @@ def rate_limited_api_call(func, *args, **kwargs):
         return func(*args, **kwargs)
 
 # Compute normalized Euclidean distance
-def compute_similarity(song1, song2, filters: dict[str, bool], weight=4):
+def compute_similarity(song1, song2, filters: dict[str, bool], weight=2):
     dist = 0
     defaults = ["tempo","acousticness","key","mode","liveness","loudness","time_signature"]
 
     # Normalize tempo data between 0 and 1, clip in case of outliers
-    song1["tempo"] = np.clip(np.interp(song1["tempo"], [0, 200], [0, 1]), 0, 1)
     song2["tempo"] = np.clip(np.interp(song2["tempo"], [0, 200], [0, 1]), 0, 1)
 
     # Normalize key data 
-    song1["key"], song2["key"] = np.interp(song1["key"], [-1, 11], [0, 1]), np.interp(song2["key"], [-1, 11], [0, 1])
+    song2["key"] = np.interp(song2["key"], [-1, 11], [0, 1])
 
     # Normalize loudness
-    song1["loudness"], song2["loudness"] = np.clip(np.interp(song1["loudness"], [-60, 0], [0, 1]), 0, 1), np.clip(np.interp(song2["loudness"], [-60, 0], [0, 1]), 0, 1)
+    song2["loudness"] = np.clip(np.interp(song2["loudness"], [-60, 0], [0, 1]), 0, 1)
 
     # Normalize time signatures
-    song1["time_signature"], song2["time_signature"] = np.interp(song1["time_signature"], [3, 7], [0, 1]), np.interp(song2["time_signature"], [3, 7], [0, 1])
+    song2["time_signature"] = np.interp(song2["time_signature"], [3, 7], [0, 1])
 
 
     # Calculate similarity using default features
@@ -94,10 +93,12 @@ def compute_similarity(song1, song2, filters: dict[str, bool], weight=4):
         if filters[feature]:
             dist += weight * (song1[feature] - song2[feature]) ** 2
 
+    dist = np.sqrt(dist)
+
     max_dist = np.sqrt(len(defaults) + sum(weight for feature in filters if filters[feature]))
 
     similarity = 1 - (dist/max_dist)
-    return np.sqrt(similarity)
+    return similarity
 
 def get_recommendations(song, artist, artist_list, filters, count=5):
     global api_call_count, start_time
@@ -131,10 +132,10 @@ def get_recommendations(song, artist, artist_list, filters, count=5):
         albums = []
         results = rate_limited_api_call(sp.artist_albums, artist_id=artist_id, album_type='album', limit=15)
         albums.extend(results['items'])
-        
+
         all_tracks = []
         if len(albums) < 3:
-            sample_size = 10
+            sample_size = 15
 
         for album in albums:
             album_id = album['id']
@@ -146,6 +147,7 @@ def get_recommendations(song, artist, artist_list, filters, count=5):
                 all_tracks.extend(sampled_tracks)
 
         artist_rankings = {}
+
         try:
             input_track_features = rate_limited_api_call(sp.audio_features, track_id)[0]
         except spotipy.exceptions.SpotifyException as e:
@@ -155,15 +157,28 @@ def get_recommendations(song, artist, artist_list, filters, count=5):
                 time.sleep(retry_after)
                 input_track_features = rate_limited_api_call(sp.audio_features, track_id)[0]
 
+        input_track_features["tempo"] = np.clip(np.interp(input_track_features["tempo"], [0, 200], [0, 1]), 0, 1)
+
+        # Normalize key data 
+        input_track_features["key"] = np.interp(input_track_features["key"], [-1, 11], [0, 1])
+
+        # Normalize loudness
+        input_track_features["loudness"] = np.clip(np.interp(input_track_features["loudness"], [-60, 0], [0, 1]), 0, 1)
+
+        # Normalize time signatures
+        input_track_features["time_signature"] = np.interp(input_track_features["time_signature"], [3, 7], [0, 1])
+
+
+        
         for track in all_tracks:
             try:
-                track_features = rate_limited_api_call(sp.audio_features, track_id)[0]
+                track_features = rate_limited_api_call(sp.audio_features, track["id"])[0]
             except spotipy.exceptions.SpotifyException as e:
                 if e.http_status == 429:  # Too Many Requests
                     retry_after = int(e.headers.get('Retry-After', 5))
                     print(f"Rate limit exceeded. Retrying after {retry_after} seconds.")
                     time.sleep(retry_after)
-                    track_features = rate_limited_api_call(sp.audio_features, track_id)[0]
+                    track_features = rate_limited_api_call(sp.audio_features, track["id"])[0]
 
             if track_features is not None:  # Check if audio features were retrieved
                 similarity = compute_similarity(input_track_features, track_features, filters)
@@ -171,6 +186,7 @@ def get_recommendations(song, artist, artist_list, filters, count=5):
 
         # Sort and update rankings
         artist_rankings = dict(sorted(artist_rankings.items(), key=lambda item: item[1], reverse=True))
+        
         for track_id, similarity in list(artist_rankings.items())[:count]:
             track = rate_limited_api_call(sp.track, track_id)
             rankings[track_id] = [track["name"], track['artists'][0]['name'], similarity, track['album']['images'][0]['url']]
