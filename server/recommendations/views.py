@@ -18,18 +18,18 @@ class RecommendationViewSet(viewsets.ModelViewSet):
 
     @action(detail=False, methods=['post'])
     def process_recommendations(self, request):  # Add `self` as the first parameter
-        reference_track = request.data.get('referenceTrack')
-        reference_artist = request.data.get('referenceArtist')
+        referenceTrack = request.data.get('referenceTrack')
+        referenceArtist = request.data.get('referenceArtist')
         filters = request.data.get('toggles', {})
         artists = request.data.get('badges', [])
 
-        recommended_songs = get_recommendations(reference_track, reference_artist, artists, filters)
+        recommended_songs = get_recommendations(referenceTrack, referenceArtist, artists, filters)
 
         rec_list = [song for song in recommended_songs.values()]
         
         recommendation = Recommendation(
-            song_name=reference_track,
-            artist_name=reference_artist,
+            song_name=referenceTrack,
+            artist_name=referenceArtist,
             recommended_songs=rec_list
         )
         recommendation.save()
