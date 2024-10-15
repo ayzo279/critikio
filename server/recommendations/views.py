@@ -48,6 +48,24 @@ class RecommendationViewSet(viewsets.ModelViewSet):
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
+def rate_limited_api_call(func, *args, **kwargs):
+        global api_call_count, start_time
+
+        # Check the time since the last API call
+        current_time = time.time()
+        elapsed_time = current_time - start_time
+
+        # If we have hit 20 calls in the current second, wait for the next second
+        if api_call_count >= 20:
+            time.sleep(1 - elapsed_time)  # Sleep for the remainder of the second
+            # Reset call count and start time for the next second
+            api_call_count = 0
+            start_time = time.time()
+
+        # Call the actual API function
+        api_call_count += 1
+        return func(*args, **kwargs)
+
 # Compute normalized Euclidean distance
 def compute_similarity(song1, song2, filters: dict[str, bool], weight=4):
     dist = 0
@@ -93,23 +111,6 @@ def get_recommendations(song, artist, artist_list, filters, count=5):
     search_query = f"track:{song} artist:{artist}"
     result = rate_limited_api_call(sp.search, q=search_query, type='track', limit=1)
 
-    def rate_limited_api_call(func, *args, **kwargs):
-        global api_call_count, start_time
-
-        # Check the time since the last API call
-        current_time = time.time()
-        elapsed_time = current_time - start_time
-
-        # If we have hit 20 calls in the current second, wait for the next second
-        if api_call_count >= 20:
-            time.sleep(1 - elapsed_time)  # Sleep for the remainder of the second
-            # Reset call count and start time for the next second
-            api_call_count = 0
-            start_time = time.time()
-
-        # Call the actual API function
-        api_call_count += 1
-        return func(*args, **kwargs)
     
     # Get Track ID of input song
     if not result or not result['tracks']['items']:
