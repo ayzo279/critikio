@@ -148,4 +148,4 @@ def get_recommendations(song, artist, artist_list, filters, count=5):
             rankings[track_id] = [sp.track(track_id)["name"], similarity]
 
     # Return only the top `count` rankings
-    return dict(sorted(rankings.items(), key=lambda item: item[1], reverse=True)[:count])
+    return dict(sorted(rankings.items(), key=lambda item: item[1][1], reverse=True)[:count])
