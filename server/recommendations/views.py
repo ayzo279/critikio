@@ -33,8 +33,8 @@ class RecommendationViewSet(viewsets.ModelViewSet):
         print(rec_list)
         
         recommendation = Recommendation(
-            song_name=referenceTrack,
-            artist_name=referenceArtist,
+            referenceTrack=referenceTrack,
+            referenceArtist=referenceArtist,
             recommended_songs=rec_list
         )
         recommendation.save()
