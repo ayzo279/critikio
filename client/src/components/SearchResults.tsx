@@ -44,6 +44,7 @@ const SearchResults: React.FC<SearchProps> = ({
           }
         );
         const data = response.data; // Use response.data directly
+        console.log(data)
         if (data.recommended_songs && Array.isArray(data.recommended_songs)) {
           const songList: any[][] = [];
 
