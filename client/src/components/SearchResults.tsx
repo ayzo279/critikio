@@ -18,7 +18,6 @@ const audioFeatures: { [key: string]: string } = {
   speechiness: "Vocal presence",
 };
 
-
 const SearchResults: React.FC<SearchProps> = ({
   referenceTrack,
   referenceArtist,
@@ -80,7 +79,11 @@ const SearchResults: React.FC<SearchProps> = ({
   }, [recommendations]);
 
   if (loading && recommendations.length === 0) {
-    return <div className="flex flex-col text-4xl items-center justify-center">Loading...</div>;
+    return (
+      <div className="flex flex-col text-4xl items-center justify-center">
+        Loading...
+      </div>
+    );
   }
 
   if (error) {
@@ -91,12 +94,20 @@ const SearchResults: React.FC<SearchProps> = ({
   const interval = 30000; // Interval in milliseconds (30 seconds)
 
   function reloadWebsite() {
-    axios.get(url)
-      .then(response => {
-        console.log(`Reloaded at ${new Date().toISOString()}: Status Code ${response.status}`);
+    axios
+      .get(url)
+      .then((response) => {
+        console.log(
+          `Reloaded at ${new Date().toISOString()}: Status Code ${
+            response.status
+          }`
+        );
       })
-      .catch(error => {
-        console.error(`Error reloading at ${new Date().toISOString()}:`, error.message);
+      .catch((error) => {
+        console.error(
+          `Error reloading at ${new Date().toISOString()}:`,
+          error.message
+        );
       });
   }
 
@@ -104,44 +115,38 @@ const SearchResults: React.FC<SearchProps> = ({
 
   return (
     <div className="flex flex-col justify-center items-center">
-    <p className="text-2xl">
-    Here are some songs similar to
-    </p>
-    <div className="flex flex-col items-center p-4">
-    <p className="text-4xl font-semibold">
-      {referenceTrack}
-    </p>
-    <p className="text-md">
-      {referenceArtist.toUpperCase()}
-    </p>
-    </div>
-    <div className="flex flex-row space-x-2">
-    {Object.entries(toggles)
-        .filter(([_, value]) => value === true) // Filter out only true values
-        .map(([key]) => (
-          <div
-            key={key} // Use the key as the unique identifier
-            className="px-4 py-2 bg-blue-700 text-white rounded-full"
-          >
-            {audioFeatures[key]}
-          </div>
-        ))}
-        </div>
-    <div className="flex flex-wrap justify-center gap-4 p-4">
-      {recommendations.length > 0 ? (
-        recommendations.map((song, index) => (
-          <TrackCard
-            key={index} // Use song id as the unique key
-            trackTitle={song[0]} // Track title
-            artistName={song[1]} // Artist name
-            imageURL={song[3]} // Image URL
-            similarityScore={song[2]} // Similarity score
-          />
-        ))
-      ) : (
-        <div>No recommended songs available</div>
-      )}
-    </div>
+      <p className="text-2xl">Here are some songs similar to</p>
+      <div className="flex flex-col items-center p-4">
+        <p className="text-4xl font-semibold">{referenceTrack}</p>
+        <p className="text-md">{referenceArtist.toUpperCase()}</p>
+      </div>
+      <div className="flex flex-row space-x-2">
+        {Object.entries(toggles)
+          .filter(([_, value]) => value === true) // Filter out only true values
+          .map(([key]) => (
+            <div
+              key={key} // Use the key as the unique identifier
+              className="px-4 py-2 bg-blue-700 text-white rounded-full"
+            >
+              {audioFeatures[key]}
+            </div>
+          ))}
+      </div>
+      <div className="flex flex-wrap justify-center gap-4 p-4">
+        {recommendations.length > 0 ? (
+          recommendations.map((song, index) => (
+            <TrackCard
+              key={index} // Use song id as the unique key
+              trackTitle={song[0]} // Track title
+              artistName={song[1]} // Artist name
+              imageURL={song[3]} // Image URL
+              similarityScore={song[2]} // Similarity score
+            />
+          ))
+        ) : (
+          <div>No recommended songs available</div>
+        )}
+      </div>
     </div>
   );
 };
