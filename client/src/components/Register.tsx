@@ -1,17 +1,32 @@
 import React, { useState } from "react";
-import { registerUser } from "../services/auth";
+import { registerUser, signinUser } from "../services/auth";
+import { useNavigate } from "react-router-dom";
 
 const Register: React.FC = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
 
+  const navigate = useNavigate();
+
   const handleRegistration = async (e: React.FormEvent) => {
     e.preventDefault();
+    var registered: boolean = false
     try {
       const user = await registerUser(email, password);
+      registered = true
       console.log("User successfully registered: ", user);
     } catch (error) {
       console.log("Registration failed: ", error);
+    }
+    
+    if (registered) {
+      try {
+        const user = await signinUser(email, password);
+        console.log("User successfully logged in:", user);
+        navigate("/home")
+      } catch (error) {
+        console.error("Login failed:", error);
+      }
     }
   };
 
@@ -21,7 +36,7 @@ const Register: React.FC = () => {
         className="bg-white shadow-md rounded-lg px-16 pt-8 pb-8 mb-4"
         onSubmit={handleRegistration}
       >
-        <p className="text-6xl text-center pb-8">critik.io</p>
+        <p className="text-6xl text-center pb-8">harmonalyze</p>
         <div className="mb-4">
           <label
             className="block text-gray-700 text-sm font-bold mb-2"
