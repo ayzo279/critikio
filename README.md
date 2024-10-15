@@ -32,7 +32,7 @@
 
 ## Features in-development (stay tuned!)
 <ul>
-  <li>**Exploration history** Users will be able to save their explorations to a repository accessable from the sidebar for view later.</li>
-  <li>**Open discovery** An alternative button option will be added to allow for free explorations of current hits instead of requiring target artists. Listen to artists you may not have heard from before.</li>
-  <li>**Song data analysis** Compare the features of songs side by side to understand their similarities and differences. Explore the track-by-track, album-by-album feature variations from individual artists.</li>
+  <li> **Exploration history** Users will be able to save their explorations to a repository accessable from the sidebar for view later.</li>
+  <li> **Open discovery** An alternative button option will be added to allow for free explorations of current hits instead of requiring target artists. Listen to artists you may not have heard from before.</li>
+  <li> **Song data analysis** Compare the features of songs side by side to understand their similarities and differences. Explore the track-by-track, album-by-album feature variations from individual artists.</li>
 </ul>
