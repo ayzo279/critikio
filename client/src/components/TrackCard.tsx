@@ -17,10 +17,10 @@ const TrackCard: React.FC<TrackCardProps> = ({
     const percentage = (score * 100).toFixed(1);
     return `${percentage}`;
   };
-
+  
   return (
-    <div className="max-w-xs bg-white border border-gray-500 rounded-lg shadow dark:bg-gray-800 dark:border-gray-70">
-      <div className="w-full h-64 overflow-hidden">
+    <div className="max-w-72 bg-white border border-gray-500 rounded-lg shadow dark:bg-gray-800 dark:border-gray-70">
+      <div className="w-full h-48 overflow-hidden">
         <img
           src={imageURL}
           alt="Album cover of {trackTitle}"

@@ -18,7 +18,7 @@ const Navbar: React.FC = () => {
   return (
     <div className="h-screen w-64 fixed top-0 left-0 bg-slate-800 shadow-md">
       <div className="flex-col flex items-center justify-center">
-        <div className="text-white text-3xl font-bold p-8">critik.io</div>
+        <div className="text-white text-2xl font-bold p-8">harmonalyze</div>
         <nav className="mt-10 w-full text-md text-white font-light">
           <ul className="space-y-4 px-1">
             <li>

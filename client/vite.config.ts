@@ -4,4 +4,13 @@ import react from '@vitejs/plugin-react'
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
+  server: {
+    proxy: {
+      '/recommendation':{
+        target: 'https://harmonalyze.onrender.com',
+        changeOrigin: true,
+        secure: false,
+      }
+    }
+  }
 })
