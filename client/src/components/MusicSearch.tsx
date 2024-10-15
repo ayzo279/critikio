@@ -9,13 +9,13 @@ const MusicSearch: React.FC = () => {
   const [referenceArtist, setReferenceArtist] = useState("");
   const [showResults, setShowResults] = useState(false); // State to track visibility of results
 
-
   type ToggleKey =
     | "danceability"
     | "energy"
     | "tempo"
     | "valence"
     | "speechiness";
+
   const [toggles, setToggles] = useState<{
     [key in ToggleKey]: boolean;
   }>({
@@ -69,95 +69,102 @@ const MusicSearch: React.FC = () => {
   ];
 
   return (
-    <div>{ showResults ? (
-      <SearchResults
-      referenceTrack={referenceTrack}
-      referenceArtist={referenceArtist}
-      toggles={toggles}
-      badges={badges}
-      />
-    ) : (
-    <div className="flex flex-col items-center justify-center h-full w-full p-6">
-      <div className="flex flex-col items-center space-y-2 pb-24">
-        <p className="text-6xl font-extralight text-slate-800">
-          Looking to curate a vibe?
-        </p>
-        <p className="text-xl font-bold text-slate-400">
-          Discover similar music from artists you love
-        </p>
-      </div>
-      <div className="flex flex-col items-center space-y-2 mb-24">
-        <p className="text-2xl font-extralight">REFERENCE TRACK</p>
-        <div className="flex flex-row items-center justify-center space-x-4 w-full">
-          <input
-            type="text"
-            value={referenceTrack}
-            onChange={handleTrackChange}
-            className="border border-gray-400 p-2 rounded w-96"
-            placeholder="Song"
-          />
-          <p>BY</p>
-          <input
-            type="text"
-            value={referenceArtist}
-            onChange={handleArtistChange}
-            className="border border-gray-400 p-2 rounded w-48"
-            placeholder="Artist"
-          />
-        </div>
-      </div>
-      <div className="flex flex-col items-center space-y-4 pb-8">
-        <p className="text-lg italic">
-          I am looking for songs that are similar based on...
-        </p>
-        <div className="flex flex-row space-x-8">
-          {toggleFeatures.map(({ key, label }) => (
-            <ToggleButton
-              key={key}
-              text={label}
-              initialState={toggles[key]}
-              onToggle={() => handleToggle(key)}
-              color="indigo" // You can customize this for each button if needed
-            />
-          ))}
-        </div>
-      </div>
-      <div className="flex flex-col items-center space-y-4 pb-20 w-full">
-        <p className="text-lg italic">I want songs from these artists</p>
-        <div className="flex flex-row items-center justify-center w-full">
-          <input
-            type="text"
-            value={searchInput}
-            onChange={handleSearchInputChange}
-            className="border border-gray-400 p-2 rounded w-1/5"
-            placeholder="Target artist"
-          />
+    <div>
+      {showResults ? (
+        <SearchResults
+          referenceTrack={referenceTrack}
+          referenceArtist={referenceArtist}
+          toggles={toggles}
+          badges={badges}
+        />
+      ) : (
+        <div className="flex flex-col items-center justify-center h-full w-full p-6">
+          <div className="flex flex-col items-center space-y-2 pb-24">
+            <p className="text-6xl font-extralight text-slate-800">
+              Looking to curate a vibe?
+            </p>
+            <p className="text-xl font-bold text-slate-400">
+              Discover similar music from artists you love
+            </p>
+          </div>
+          <div className="flex flex-col items-center space-y-2 mb-24">
+            <p className="text-2xl font-extralight">REFERENCE TRACK</p>
+            <div className="flex flex-row items-center justify-center space-x-4 w-full">
+              <input
+                type="text"
+                value={referenceTrack}
+                onChange={handleTrackChange}
+                className="border border-gray-400 p-2 rounded w-96"
+                placeholder="Song"
+              />
+              <p>BY</p>
+              <input
+                type="text"
+                value={referenceArtist}
+                onChange={handleArtistChange}
+                className="border border-gray-400 p-2 rounded w-48"
+                placeholder="Artist"
+              />
+            </div>
+          </div>
+          <div className="flex flex-col items-center space-y-4 pb-8">
+            <p className="text-lg italic">
+              I am looking for songs that are similar based on...
+            </p>
+            <div className="flex flex-row space-x-8">
+              {toggleFeatures.map(({ key, label }) => (
+                <ToggleButton
+                  key={key}
+                  text={label}
+                  initialState={toggles[key]}
+                  onToggle={() => handleToggle(key)}
+                  color="indigo" 
+                />
+              ))}
+            </div>
+          </div>
+          <div className="flex flex-col items-center space-y-4 pb-20 w-full">
+            <p className="text-lg italic">I want songs from these artists</p>
+            <div className="flex flex-row items-center justify-center w-full">
+              <input
+                type="text"
+                value={searchInput}
+                onChange={handleSearchInputChange}
+                className="border border-gray-400 p-2 rounded w-1/5"
+                placeholder="Target artist"
+              />
+              <button
+                onClick={handleAddBadge}
+                className="bg-green-500 text-white px-4 py-2 rounded ml-2"
+              >
+                Add artist
+              </button>
+            </div>
+            <div className="flex flex-wrap gap-2 mb-4">
+              {badges.map((badge, index) => (
+                <span
+                  key={index}
+                  className="bg-emerald-700 text-white px-4 py-1 rounded-full flex items-center"
+                >
+                  {badge}
+                  <button
+                    className="ml-2"
+                    onClick={() => handleRemoveBadge(badge)}
+                  >
+                    &times;
+                  </button>
+                </span>
+              ))}
+            </div>
+          </div>
           <button
-            onClick={handleAddBadge}
-            className="bg-green-500 text-white px-4 py-2 rounded ml-2"
+            onClick={handleSearchClick}
+            className="bg-blue-700 text-white px-4 py-2 rounded-full w-2/5"
           >
-            Add artist
+            <p className="font-semibold text-2xl p-2">SEARCH</p>
           </button>
         </div>
-        <div className="flex flex-wrap gap-2 mb-4">
-          {badges.map((badge, index) => (
-            <span
-              key={index}
-              className="bg-emerald-700 text-white px-4 py-1 rounded-full flex items-center"
-            >
-              {badge}
-              <button className="ml-2" onClick={() => handleRemoveBadge(badge)}>
-                &times;
-              </button>
-            </span>
-          ))}
-        </div>
-      </div>
-      <button onClick={handleSearchClick} className="bg-blue-700 text-white px-4 py-2 rounded-full w-2/5">
-        <p className="font-semibold text-2xl p-2">SEARCH</p>
-      </button>
-    </div>
-    )}
+      )}
     </div>
   );
 };
