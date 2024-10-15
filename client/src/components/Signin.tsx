@@ -3,7 +3,7 @@ import { signinUser } from "../services/auth";
 import { useNavigate } from "react-router-dom";
 
 interface SigninProps {
-  onSwitchToRegister: () => void; 
+  onSwitchToRegister: () => void;
 }
 
 const Signin: React.FC<SigninProps> = ({ onSwitchToRegister }) => {
@@ -26,7 +26,7 @@ const Signin: React.FC<SigninProps> = ({ onSwitchToRegister }) => {
     try {
       const user = await signinUser(email, password);
       console.log("User successfully logged in:", user);
-      navigate("/home")
+      navigate("/home");
     } catch (error) {
       console.error("Login failed:", error);
       setErrorMessage("Incorrect email/password. Please try again.");
@@ -39,9 +39,7 @@ const Signin: React.FC<SigninProps> = ({ onSwitchToRegister }) => {
         className="bg-white shadow-md rounded-lg px-16 pt-8 pb-8 mb-4"
         onSubmit={handleSignin}
       >
-        <p className="text-6xl text-center pb-8">
-          harmonalyze
-        </p>
+        <p className="text-6xl text-center pb-8">harmonalyze</p>
         <div className="mb-4">
           <label
             className="block text-gray-700 text-sm font-bold mb-2"

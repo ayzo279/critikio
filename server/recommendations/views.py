@@ -57,7 +57,7 @@ def rate_limited_api_call(func, *args, **kwargs):
 
         # If we have hit 20 calls in the current second, wait for the next second
         if api_call_count >= 20:
-            time.sleep(1)  # Sleep for the remainder of the second
+            time.sleep(6)  # Sleep for the remainder of the second
             # Reset call count and start time for the next second
             api_call_count = 0
             start_time = time.time()

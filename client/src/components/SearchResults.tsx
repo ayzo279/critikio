@@ -10,6 +10,15 @@ interface SearchProps {
   badges: string[];
 }
 
+const audioFeatures: { [key: string]: string } = {
+  danceability: "Danceability",
+  energy: "Energy",
+  tempo: "Tempo",
+  valence: "Emotions",
+  speechiness: "Vocal presence",
+};
+
+
 const SearchResults: React.FC<SearchProps> = ({
   referenceTrack,
   referenceArtist,
@@ -114,7 +123,7 @@ const SearchResults: React.FC<SearchProps> = ({
             key={key} // Use the key as the unique identifier
             className="px-4 py-2 bg-blue-700 text-white rounded-full"
           >
-            {key}
+            {audioFeatures[key]}
           </div>
         ))}
         </div>
