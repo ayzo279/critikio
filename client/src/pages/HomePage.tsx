@@ -1,8 +1,8 @@
 import React from "react";
 import Navbar from "../components/Navbar";
-import TrackCard from "../components/TrackCard";
+// import TrackCard from "../components/TrackCard";
 import MusicSearch from "../components/MusicSearch";
-import ToggleButton from "../components/ToggleButton";
+// import ToggleButton from "../components/ToggleButton";
 import { TabProvider } from "../contexts/TabContext";
 
 const HomePage: React.FC = () => {
