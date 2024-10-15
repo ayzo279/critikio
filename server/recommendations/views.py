@@ -26,13 +26,11 @@ class RecommendationViewSet(viewsets.ModelViewSet):
         recommended_songs = get_recommendations(referenceTrack, referenceArtist, artists, filters)
 
         rec_list = [song for song in recommended_songs.values()]
-        
-        print(rec_list)
-        
+
         recommendation = Recommendation(
             song_name=referenceTrack,
             artist_name=referenceArtist,
-            recommended_songs=rec_list
+            badges=rec_list
         )
         recommendation.save()
 
