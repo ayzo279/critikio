@@ -5,12 +5,16 @@ import numpy as np
 from spotipy.oauth2 import SpotifyClientCredentials
 import os
 import random
+import time 
 
 from rest_framework import status, viewsets
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from .models import Recommendation
 from .serializers import RecommendationSerializer
+
+api_call_count = 20
+start_time = time.time()
 
 class RecommendationViewSet(viewsets.ModelViewSet):
     queryset = Recommendation.objects.all()
@@ -78,6 +82,7 @@ def compute_similarity(song1, song2, filters: dict[str, bool], weight=4):
     return np.sqrt(similarity)
 
 def get_recommendations(song, artist, artist_list, filters, count=5):
+    global api_call_count, start_time
     client_id = os.getenv("SPOTIFY_CLIENT_ID")
     client_secret = os.getenv("SPOTIFY_CLIENT_SECRET")
     sample_size = 5
@@ -86,8 +91,26 @@ def get_recommendations(song, artist, artist_list, filters, count=5):
 
     # Search for the input song to get its track ID
     search_query = f"track:{song} artist:{artist}"
-    result = sp.search(q=search_query, type='track', limit=1)
+    result = rate_limited_api_call(sp.search, q=search_query, type='track', limit=1)
 
+    def rate_limited_api_call(func, *args, **kwargs):
+        global api_call_count, start_time
+
+        # Check the time since the last API call
+        current_time = time.time()
+        elapsed_time = current_time - start_time
+
+        # If we have hit 20 calls in the current second, wait for the next second
+        if api_call_count >= 20:
+            time.sleep(1 - elapsed_time)  # Sleep for the remainder of the second
+            # Reset call count and start time for the next second
+            api_call_count = 0
+            start_time = time.time()
+
+        # Call the actual API function
+        api_call_count += 1
+        return func(*args, **kwargs)
+    
     # Get Track ID of input song
     if not result or not result['tracks']['items']:
         return {}  # Return an empty dict if song not found
@@ -97,7 +120,7 @@ def get_recommendations(song, artist, artist_list, filters, count=5):
     # Store artist IDs of input artist list
     artist_ids = []
     for artist_name in artist_list:
-        result = sp.search(q=artist_name, type='artist', limit=1)
+        result = rate_limited_api_call(sp.search, q=artist_name, type='artist', limit=1)
         if result and result['artists']['items']:
             artist_ids.append(result['artists']['items'][0]['id'])
 
@@ -105,7 +128,7 @@ def get_recommendations(song, artist, artist_list, filters, count=5):
     
     for artist_id in artist_ids:
         albums = []
-        results = sp.artist_albums(artist_id=artist_id, album_type='album', limit=15)
+        results = rate_limited_api_call(sp.artist_albums, artist_id=artist_id, album_type='album', limit=15)
         albums.extend(results['items'])
         
         all_tracks = []
@@ -114,7 +137,7 @@ def get_recommendations(song, artist, artist_list, filters, count=5):
 
         for album in albums:
             album_id = album['id']
-            tracks = sp.album_tracks(album_id)['items']
+            tracks = rate_limited_api_call(sp.album_tracks, album_id)['items']
             
             # Ensure this is a list and has enough tracks
             if isinstance(tracks, list) and len(tracks) > 0:
@@ -123,23 +146,23 @@ def get_recommendations(song, artist, artist_list, filters, count=5):
 
         artist_rankings = {}
         try:
-            input_track_features = sp.audio_features(track_id)[0]
+            input_track_features = rate_limited_api_call(sp.audio_features, track_id)[0]
         except spotipy.exceptions.SpotifyException as e:
             if e.http_status == 429:  # Too Many Requests
                 retry_after = int(e.headers.get('Retry-After', 5))
                 print(f"Rate limit exceeded. Retrying after {retry_after} seconds.")
                 time.sleep(retry_after)
-                input_track_features = sp.audio_features(track_id)[0]
+                input_track_features = rate_limited_api_call(sp.audio_features, track_id)[0]
 
         for track in all_tracks:
             try:
-                track_features = sp.audio_features(track['id'])[0]
+                track_features = rate_limited_api_call(sp.audio_features, track_id)[0]
             except spotipy.exceptions.SpotifyException as e:
                 if e.http_status == 429:  # Too Many Requests
                     retry_after = int(e.headers.get('Retry-After', 5))
                     print(f"Rate limit exceeded. Retrying after {retry_after} seconds.")
                     time.sleep(retry_after)
-                    track_features = sp.audio_features(track['id'])[0]
+                    track_features = rate_limited_api_call(sp.audio_features, track_id)[0]
 
             if track_features is not None:  # Check if audio features were retrieved
                 similarity = compute_similarity(input_track_features, track_features, filters)
@@ -148,7 +171,7 @@ def get_recommendations(song, artist, artist_list, filters, count=5):
         # Sort and update rankings
         artist_rankings = dict(sorted(artist_rankings.items(), key=lambda item: item[1], reverse=True))
         for track_id, similarity in list(artist_rankings.items())[:count]:
-            track = sp.track(track_id)
+            track = rate_limited_api_call(sp.track, track_id)
             rankings[track_id] = [track["name"], track['artists'][0]['name'], similarity, track['album']['images'][0]['url']]
 
     # Return only the top `count` rankings
