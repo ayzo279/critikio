@@ -62,6 +62,7 @@ CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:5173',  # Vite's default development server
     'https://harmonalyze.onrender.com',  # Render deployment URL
+    'https://harmonalyze-site.onrender.com',  # Render deployment URL
 ]
 
 CORS_ALLOW_HEADERS = [
