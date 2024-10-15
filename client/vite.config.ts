@@ -5,12 +5,6 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   plugins: [react()],
   server: {
-    proxy: {
-      '/recommendation':{
-        target: 'https://harmonalyze.onrender.com',
-        changeOrigin: true,
-        secure: false,
-      }
-    }
+    host: '0.0.0.0',
   }
 })
