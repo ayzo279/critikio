@@ -16,7 +16,7 @@ const SearchResults: React.FC<SearchProps> = ({
   toggles,
   badges,
 }) => {
-  const [results, setResults] = useState<any[]>([]);
+  // const [results, setResults] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [recommendations, setRecommendations] = useState<any[][]>([]);
@@ -70,7 +70,7 @@ const SearchResults: React.FC<SearchProps> = ({
     console.log("Results updated:", recommendations);
   }, [recommendations]);
 
-  if (loading && results.length === 0) {
+  if (loading && recommendations.length === 0) {
     return <div className="flex flex-col text-4xl items-center justify-center">Loading...</div>;
   }
 
@@ -93,7 +93,7 @@ const SearchResults: React.FC<SearchProps> = ({
     </div>
     <div className="flex flex-row space-x-2">
     {Object.entries(toggles)
-        .filter(([key, value]) => value === true) // Filter out only true values
+        .filter(([_, value]) => value === true) // Filter out only true values
         .map(([key]) => (
           <div
             key={key} // Use the key as the unique identifier
