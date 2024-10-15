@@ -74,7 +74,7 @@ class RecommendationsTestCase(TestCase):
         reference_track = "Shape of You"
         reference_artist = "Ed Sheeran"
         filters = {"danceability":True, "energy":True}
-        artists = {"Benson Boone"}
+        artists = ["Benson Boone"]
 
         recommended_songs = get_recommendations(reference_track, reference_artist, artists, filters)
 

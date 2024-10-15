@@ -16,6 +16,9 @@ class RecommendationViewSet(viewsets.ModelViewSet):
     queryset = Recommendation.objects.all()
     serializer_class = RecommendationSerializer
 
+    def create(self, request, *args, **kwargs):
+        return self.process_recommendations(request)
+    
     @action(detail=False, methods=['post'])
     def process_recommendations(self, request):  # Add `self` as the first parameter
         referenceTrack = request.data.get('referenceTrack')
@@ -26,11 +29,13 @@ class RecommendationViewSet(viewsets.ModelViewSet):
         recommended_songs = get_recommendations(referenceTrack, referenceArtist, artists, filters)
 
         rec_list = [song for song in recommended_songs.values()]
-
+        
+        print(rec_list)
+        
         recommendation = Recommendation(
             song_name=referenceTrack,
             artist_name=referenceArtist,
-            badges=rec_list
+            recommended_songs=rec_list
         )
         recommendation.save()
 
@@ -138,9 +143,9 @@ def get_recommendations(song, artist, artist_list, filters, count=5):
                 artist_rankings[track['id']] = similarity
 
         # Sort and update rankings
-        artist_rankings = dict(sorted(artist_rankings.items(), key=lambda item: item[1]))
+        artist_rankings = dict(sorted(artist_rankings.items(), key=lambda item: item[1], reverse=True))
         for track_id, similarity in list(artist_rankings.items())[:count]:
             rankings[track_id] = [sp.track(track_id)["name"], similarity]
 
     # Return only the top `count` rankings
-    return dict(sorted(rankings.items(), key=lambda item: item[1])[:count])
+    return dict(sorted(rankings.items(), key=lambda item: item[1], reverse=True)[:count])
