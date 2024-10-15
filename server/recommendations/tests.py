@@ -79,6 +79,3 @@ class RecommendationsTestCase(TestCase):
         recommended_songs = get_recommendations(reference_track, reference_artist, artists, filters)
 
         rec_list = [song for song in recommended_songs.values()]
-
-        print(rec_list)
-

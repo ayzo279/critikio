@@ -40,7 +40,7 @@ const Signin: React.FC<SigninProps> = ({ onSwitchToRegister }) => {
         onSubmit={handleSignin}
       >
         <p className="text-6xl text-center pb-8">
-          critik.io
+          harmonalyze
         </p>
         <div className="mb-4">
           <label
