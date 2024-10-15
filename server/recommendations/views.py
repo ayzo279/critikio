@@ -27,6 +27,8 @@ class RecommendationViewSet(viewsets.ModelViewSet):
 
         rec_list = [song for song in recommended_songs.values()]
         
+        print(rec_list)
+        
         recommendation = Recommendation(
             song_name=referenceTrack,
             artist_name=referenceArtist,
