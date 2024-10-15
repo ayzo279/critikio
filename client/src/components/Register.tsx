@@ -10,20 +10,20 @@ const Register: React.FC = () => {
 
   const handleRegistration = async (e: React.FormEvent) => {
     e.preventDefault();
-    var registered: boolean = false
+    var registered: boolean = false;
     try {
       const user = await registerUser(email, password);
-      registered = true
+      registered = true;
       console.log("User successfully registered: ", user);
     } catch (error) {
       console.log("Registration failed: ", error);
     }
-    
+
     if (registered) {
       try {
         const user = await signinUser(email, password);
         console.log("User successfully logged in:", user);
-        navigate("/home")
+        navigate("/home");
       } catch (error) {
         console.error("Login failed:", error);
       }
