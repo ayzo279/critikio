@@ -4,7 +4,7 @@
 ## How to use
 <ol>
   <li>
-    Go to [Harmonalyze](https://harmonalyze-site.onrender.com).
+    Go to https://harmonalyze-site.onrender.com.
   </li>
   <li>
     Create an account and navigate to the homepage.
