@@ -80,7 +80,7 @@ def compute_similarity(song1, song2, filters: dict[str, bool], weight=4):
 def get_recommendations(song, artist, artist_list, filters, count=5):
     client_id = os.getenv("SPOTIFY_CLIENT_ID")
     client_secret = os.getenv("SPOTIFY_CLIENT_SECRET")
-    sample_size = 10
+    sample_size = 5
     
     sp = spotipy.Spotify(auth_manager=SpotifyClientCredentials(client_id=client_id, client_secret=client_secret))
 
@@ -109,6 +109,9 @@ def get_recommendations(song, artist, artist_list, filters, count=5):
         albums.extend(results['items'])
         
         all_tracks = []
+        if len(albums) < 3:
+            sample_size = 10
+
         for album in albums:
             album_id = album['id']
             tracks = sp.album_tracks(album_id)['items']
