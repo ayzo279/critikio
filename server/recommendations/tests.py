@@ -5,7 +5,7 @@ from unittest.mock import patch
 
 from dotenv import load_dotenv
 import os
-from recommendations.views import compute_similarity, get_recommendations, get_global_recs
+from recommendations.views import compute_similarity, get_recommendations, get_global_recs, test_api
 
 load_dotenv()
 
@@ -83,8 +83,11 @@ class RecommendationsTestCase(TestCase):
         reference_track = "Shape of You"
         reference_artist = "Ed Sheeran"
         filters = {"danceability":True, "energy":True}
-        recommended_songs = get_global_recs(reference_track, reference_artist, filters)
-        print(recommended_songs)
+        get_global_recs(reference_track, reference_artist, filters)
+        # print(recommended_songs)
+
+    # def test_api(self):
+    #     print(test_api())
 
 
     

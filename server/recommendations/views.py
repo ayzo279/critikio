@@ -128,15 +128,17 @@ def get_global_recs(song, artist, filters, count=5):
     sp = spotipy.Spotify(auth_manager=SpotifyClientCredentials(client_id=client_id, client_secret=client_secret))
     
     hot100_id = "6UeSakyzhiEt4NB3UAd6NQ"
-    global_tracks = sp.playlist_tracks(hot100_id)
+    global_tracks = rate_limited_api_call(sp.playlist_tracks, hot100_id)
     search_query = f"track:{song} artist:{artist}"
+
     result = rate_limited_api_call(sp.search, q=search_query, type='track', limit=1)
 
-    # Get Track ID of input song
+    # # Get Track ID of input song
     if not result or not result['tracks']['items']:
         return []  # Return an empty dict if song not found
 
     track_id = result['tracks']['items'][0]['id']
+    # print(sp.audio_features(track_id))
     try:
         input_track_features = rate_limited_api_call(sp.audio_features, track_id)[0]
     except spotipy.exceptions.SpotifyException as e:
@@ -144,34 +146,41 @@ def get_global_recs(song, artist, filters, count=5):
             print("Rate limit exceeded. Try again later")
             return []
 
-    # Normalize features
-    input_track_features["tempo"] = np.clip(np.interp(input_track_features["tempo"], [0, 200], [0, 1]), 0, 1)
-    input_track_features["key"] = np.interp(input_track_features["key"], [-1, 11], [0, 1])
-    input_track_features["loudness"] = np.clip(np.interp(input_track_features["loudness"], [-60, 0], [0, 1]), 0, 1)
-    input_track_features["time_signature"] = np.interp(input_track_features["time_signature"], [3, 7], [0, 1])
+    print(input_track_features)
+    # # Normalize features
+    # input_track_features["tempo"] = np.clip(np.interp(input_track_features["tempo"], [0, 200], [0, 1]), 0, 1)
+    # input_track_features["key"] = np.interp(input_track_features["key"], [-1, 11], [0, 1])
+    # input_track_features["loudness"] = np.clip(np.interp(input_track_features["loudness"], [-60, 0], [0, 1]), 0, 1)
+    # input_track_features["time_signature"] = np.interp(input_track_features["time_signature"], [3, 7], [0, 1])
 
-    try:
-        global_features = rate_limited_api_call(sp.audio_features, global_tracks)
-    except spotipy.exceptions.SpotifyException as e:
-        if e.http_status == 429:  # Too Many Requests
-            print("Rate limit exceeded. Try again later")
-            return []
+    # try:
+    #     global_features = rate_limited_api_call(sp.audio_features, global_tracks)
+    # except spotipy.exceptions.SpotifyException as e:
+    #     if e.http_status == 429:  # Too Many Requests
+    #         print("Rate limit exceeded. Try again later")
+    #         return []
     
-    rankings = {}
-    recommendations = []
+    # rankings = {}
+    # recommendations = []
     
-    for track in global_features:
-        rankings[track['id']] = compute_similarity(input_track_features, track, filters)
+    # for track in global_features:
+    #     rankings[track['id']] = compute_similarity(input_track_features, track, filters)
 
-    rankings = sorted(rankings.items(), key=lambda item: item[1], reverse=True)[:count]
-    tracks_info = rate_limited_api_call(sp.tracks, [track_id for track_id in rankings.keys()])
-    for track in tracks_info:
-        recommendations.append([track['id'], track['artists'][0]['name'], rankings[track['id']], track['album']['images'][0]['url']])
+    # rankings = sorted(rankings.items(), key=lambda item: item[1], reverse=True)[:count]
+    # tracks_info = rate_limited_api_call(sp.tracks, [track_id for track_id in rankings.keys()])
+    # for track in tracks_info:
+    #     recommendations.append([track['id'], track['artists'][0]['name'], rankings[track['id']], track['album']['images'][0]['url']])
 
-    return recommendations
+    # return recommendations
 
     
+def test_api():
+    client_id = os.getenv("SPOTIFY_CLIENT_ID")
+    client_secret = os.getenv("SPOTIFY_CLIENT_SECRET")
+    sp = spotipy.Spotify(auth_manager=SpotifyClientCredentials(client_id=client_id, client_secret=client_secret))
 
+    track = sp.playlist_tracks("6UeSakyzhiEt4NB3UAd6NQ")
+    print(track)
 
 
 
