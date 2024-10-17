@@ -105,11 +105,18 @@ def get_recommendations(song, artist, artist_list, filters, count=5):
                 all_rankings[batch[i]['id']] = similarity
 
     # Sort & update rankings and retrieve top `count` tracks
-    top_ranks = dict(sorted(all_rankings.items(), key=lambda item: item[1], reverse=True)[:count])
+    top_ranks = dict(list(dict(sorted(all_rankings.items(), key=lambda item: item[1], reverse=True)).items())[:count * 2])
         
     tracks_info = rate_limited_api_call(sp.tracks, [track_id for track_id in top_ranks.keys()])
+
+    dupe_tracker = set()
+
     for track in tracks_info['tracks']:
-        recommendations.append([track['name'], track['artists'][0]['name'], top_ranks[track['id']], track['album']['images'][0]['url']])
+        if track['name'] in dupe_tracker or len(recommendations) >= count:
+            continue
+        else:
+            dupe_tracker.add(track['name'])
+            recommendations.append([track['name'], track['artists'][0]['name'], top_ranks[track['id']], track['album']['images'][0]['url']])
 
     return recommendations
 

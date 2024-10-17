@@ -5,7 +5,7 @@ from unittest.mock import patch
 
 from dotenv import load_dotenv
 import os
-from recommendations.views import compute_similarity, get_recommendations, get_global_recs, test_api
+from recommendations.views import compute_similarity, get_recommendations, get_global_recs
 
 load_dotenv()
 
