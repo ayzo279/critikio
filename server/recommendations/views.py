@@ -120,7 +120,7 @@ def get_recommendations(song, artist, artist_list, filters, count=5):
             continue
         else:
             dupe_tracker.add(track['name'])
-            recommendations.append([track['name'], track['artists'][0]['name'], top_ranks[track['id']], track['album']['images'][0]['url']])
+            recommendations.append([track['name'], track['artists'][0]['name'], top_ranks[track['id']], track['album']['images'][0]['url'], track['id']])
 
     return recommendations
 
@@ -171,7 +171,7 @@ def get_global_recs(song, artist, filters, count=5):
     track_list = [track_id for track_id in rankings.keys()]
     tracks_info = rate_limited_api_call(sp.tracks, track_list)
     for track in tracks_info['tracks']:
-        recommendations.append([track['name'], track['artists'][0]['name'], rankings[track['id']], track['album']['images'][0]['url']])
+        recommendations.append([track['name'], track['artists'][0]['name'], rankings[track['id']], track['album']['images'][0]['url'], track['id']])
 
     return recommendations
 
