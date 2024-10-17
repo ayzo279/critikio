@@ -5,6 +5,8 @@ interface TrackCardProps {
   artistName: string;
   imageURL: string;
   similarityScore: number;
+  trackID: string;
+  onClick: () => void;
 }
 
 const TrackCard: React.FC<TrackCardProps> = ({
@@ -12,6 +14,8 @@ const TrackCard: React.FC<TrackCardProps> = ({
   artistName,
   imageURL,
   similarityScore,
+  trackID,
+  onClick,
 }) => {
   const formatScore = (score: number): string => {
     const percentage = (score * 100).toFixed(1);
@@ -19,7 +23,11 @@ const TrackCard: React.FC<TrackCardProps> = ({
   };
 
   return (
-    <div className="w-72 h-1/2 bg-white border border-gray-500 rounded-lg shadow dark:bg-gray-800 dark:border-gray-70">
+    <button
+      className="track w-72 h-1/2 bg-white border border-gray-500 rounded-lg shadow dark:bg-gray-800 dark:border-gray-70"
+      data-spotify-id = {trackID}
+      onClick={onClick}
+    >
       <div className="w-full h-48 overflow-hidden">
         <img
           src={imageURL}
@@ -29,20 +37,24 @@ const TrackCard: React.FC<TrackCardProps> = ({
       </div>
       <div className="p-8 flex flex-col space-y-4 text-gray-900 dark:text-white">
         <div className="flex-down space-y-1 min-h-24">
-          <p className="text-2xl font-semibold tracking-tight line-clamp-2">{trackTitle}</p>
+          <p className="text-2xl font-semibold tracking-tight line-clamp-2">
+            {trackTitle}
+          </p>
           <p className="text-md font-normal text-gray-700 dark:text-gray-400">
             {artistName}
           </p>
         </div>
         <div className="flex flex-col items-center">
           <span className="inline-flex items-end space-x-0.5">
-            <p className="text-4xl font-semibold">{formatScore(similarityScore)}</p>
+            <p className="text-4xl font-semibold">
+              {formatScore(similarityScore)}
+            </p>
             <p className="pb-1 text-md">%</p>
           </span>
           <p className="text-sm font-extralight">Similarity</p>
         </div>
       </div>
-    </div>
+    </button>
   );
 };
 
