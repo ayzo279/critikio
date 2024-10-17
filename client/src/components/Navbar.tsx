@@ -1,5 +1,5 @@
 import React from "react";
-import { HomeIcon } from "@heroicons/react/24/solid";
+import { HomeIcon, LockClosedIcon } from "@heroicons/react/24/solid";
 import { useLocation } from "react-router-dom";
 import { signoutUser } from "../services/auth";
 
@@ -39,11 +39,11 @@ const Navbar: React.FC = () => {
                   location.pathname === "#" ? "bg-blue-700" : ""
                 }`}
               >
-                <HomeIcon className="h-6 w-6 text-white" />
-                <span>Some tab</span>
+                <LockClosedIcon className="h-6 w-6 text-white" />
+                <span>Coming Soon</span>
               </a>
             </li>
-            <li>
+            {/* <li>
               <a
                 href="#"
                 className={`flex space-x-4 py-3 pl-8 rounded-xl ${
@@ -64,7 +64,7 @@ const Navbar: React.FC = () => {
                 <HomeIcon className="h-6 w-6 text-white" />
                 <span>Some tab</span>
               </a>
-            </li>
+            </li> */}
           </ul>
         </nav>
         <button

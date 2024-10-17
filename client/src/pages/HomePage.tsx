@@ -1,6 +1,6 @@
 import React from "react";
 import Navbar from "../components/Navbar";
-// import TrackCard from "../components/TrackCard";
+import TrackCard from "../components/TrackCard";
 import MusicSearch from "../components/MusicSearch";
 // import ToggleButton from "../components/ToggleButton";
 import { TabProvider } from "../contexts/TabContext";
@@ -14,7 +14,7 @@ const HomePage: React.FC = () => {
           <MusicSearch />
         </div>
         {/* <ToggleButton text="Danceability" /> */}
-        {/* <TrackCard trackTitle="Shape of You" artistName="Ed Sheeran" imageURL="https://i.scdn.co/image/ab67616d0000b27383e9b06ccd219248b5301264" similarityScore={0.5}/> */}
+        {/* <TrackCard trackTitle="Shape of You in the Stars (From the Vault) (Taylor's Version)" artistName="Ed Sheeran" imageURL="https://i.scdn.co/image/ab67616d0000b27383e9b06ccd219248b5301264" similarityScore={0.5}/> */}
       </div>
     </TabProvider>
   );

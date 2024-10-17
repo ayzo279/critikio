@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import TrackCard from "./TrackCard";
+import { ChevronLeftIcon } from "@heroicons/react/24/solid";
 
 interface SearchProps {
   referenceTrack: string;
@@ -16,6 +17,14 @@ const audioFeatures: { [key: string]: string } = {
   tempo: "Tempo",
   valence: "Emotions",
   speechiness: "Vocal presence",
+};
+
+const featureColors: { [key: string]: string } = {
+  danceability: "bg-emerald-500",
+  energy: "bg-orange-500",
+  tempo: "bg-sky-500",
+  valence: "bg-yellow-400",
+  speechiness: "bg-purple-700",
 };
 
 const SearchResults: React.FC<SearchProps> = ({
@@ -115,25 +124,28 @@ const SearchResults: React.FC<SearchProps> = ({
   setInterval(reloadWebsite, interval);
 
   return (
+    <div>
+    <a href="/home" className="fixed">
+    <div className="flex flex-row space-x-2 items-center text-lg text-blue-700"><ChevronLeftIcon className="h-6 w-6"/> <p>Discover more songs</p></div></a>
     <div className="flex flex-col justify-center items-center">
       <p className="text-2xl">Here are some songs similar to</p>
       <div className="flex flex-col items-center p-4">
         <p className="text-4xl font-semibold">{referenceTrack}</p>
         <p className="text-md">{referenceArtist.toUpperCase()}</p>
       </div>
-      <div className="flex flex-row space-x-2">
+      <div className="flex flex-row space-x-2 pb-4">
         {Object.entries(toggles)
           .filter(([_, value]) => value === true) // Filter out only true values
           .map(([key]) => (
             <div
               key={key} // Use the key as the unique identifier
-              className="px-4 py-2 bg-blue-700 text-white rounded-full"
+              className={`px-4 py-2 ${featureColors[key]} text-white rounded-full`}
             >
               {audioFeatures[key]}
             </div>
           ))}
       </div>
-      <div className="flex flex-wrap justify-center gap-4 p-4">
+      <div className="flex flex-wrap justify-center gap-8 p-4">
         {recommendations.length > 0 ? (
           recommendations.map((song, index) => (
             <TrackCard
@@ -148,6 +160,7 @@ const SearchResults: React.FC<SearchProps> = ({
           <div>No recommended songs available</div>
         )}
       </div>
+    </div>
     </div>
   );
 };
