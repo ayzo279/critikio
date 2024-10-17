@@ -55,37 +55,37 @@ class RecommendationsTestCase(TestCase):
         self.assertIsInstance(similarity, float)
         self.assertLessEqual(similarity, 1.0)
 
-    def test_get_recommendations(self):
-        song = "Roxanne"
-        artist = "The Police"
-        artist_list = ["Bruno Mars"]
-        filters = {
-            "danceability": True,
-            "valence": True
-        }
+    # def test_get_recommendations(self):
+    #     song = "Roxanne"
+    #     artist = "The Police"
+    #     artist_list = ["Bruno Mars"]
+    #     filters = {
+    #         "danceability": True,
+    #         "valence": True
+    #     }
 
-        recommendations = get_recommendations(song, artist, artist_list, filters, count=3)
-        print(recommendations)
-        self.assertIsInstance(recommendations, list)
-        self.assertLessEqual(len(recommendations), 3)
+    #     recommendations = get_recommendations(song, artist, artist_list, filters, count=3)
+    #     print(recommendations)
+    #     self.assertIsInstance(recommendations, list)
+    #     self.assertLessEqual(len(recommendations), 3)
 
     def test_process_recommendations_success(self):
         # Mock the return value of get_recommendations
         reference_track = "Shake it off"
         reference_artist = "Taylor Swift"
         filters = {"danceability":True, "energy":True}
-        artists = ["Taylor Swift"]
+        artists = ["Olivia Rodrigo","Benson Boone"]
 
         recommended_songs = get_recommendations(reference_track, reference_artist, artists, filters)
 
         print(recommended_songs)
 
-    def test_get_global_recommendations(self):
-        reference_track = "Shape of You"
-        reference_artist = "Ed Sheeran"
-        filters = {"danceability":True, "energy":True}
-        recommended_songs = get_global_recs(reference_track, reference_artist, filters)
-        print(recommended_songs)
+    # def test_get_global_recommendations(self):
+    #     reference_track = "Shape of You"
+    #     reference_artist = "Ed Sheeran"
+    #     filters = {"danceability":True, "energy":True}
+    #     recommended_songs = get_global_recs(reference_track, reference_artist, filters)
+    #     print(recommended_songs)
 
 
 

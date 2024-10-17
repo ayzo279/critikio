@@ -25,8 +25,12 @@ class RecommendationViewSet(viewsets.ModelViewSet):
         referenceArtist = request.data.get('referenceArtist')
         filters = request.data.get('toggles', {})
         artists = request.data.get('badges', [])
-
-        rec_list = get_recommendations(referenceTrack, referenceArtist, artists, filters)
+        
+        rec_list = []
+        if not artists:
+            rec_list = get_global_recs(referenceTrack, referenceArtist, filters)
+        else:
+            rec_list = get_recommendations(referenceTrack, referenceArtist, artists, filters)
         
         recommendation = Recommendation(
             referenceTrack=referenceTrack,
