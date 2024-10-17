@@ -57,7 +57,11 @@ const MusicSearch: React.FC = () => {
   };
 
   const handleSearchClick = () => {
-    setShowResults(true); // Show results when search button is clicked
+    if (referenceTrack && referenceArtist) {
+      setShowResults(true); // Show results when search button is clicked
+    } else {
+      alert("Please fill out both the reference track and artist.")
+    }
   };
 
   const toggleFeatures: { key: ToggleKey; label: string }[] = [
@@ -124,7 +128,7 @@ const MusicSearch: React.FC = () => {
             </div>
           </div>
           <div className="flex flex-col items-center space-y-4 pb-20 w-full">
-            <p className="text-lg italic">I want songs from these artists</p>
+            <p className="text-lg italic">I want songs from these artists (optional)</p>
             <div className="flex flex-row items-center justify-center w-full">
               <input
                 type="text"
