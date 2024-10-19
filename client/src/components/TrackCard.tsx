@@ -8,7 +8,7 @@ interface TrackCardProps {
   trackID: string;
   onClick: () => void;
   toggles: { [key: string]: boolean };
-  featureColors: { [key: string] : string};
+  featureColors: { [key: string]: string };
 }
 
 const TrackCard: React.FC<TrackCardProps> = ({
@@ -19,7 +19,7 @@ const TrackCard: React.FC<TrackCardProps> = ({
   trackID,
   onClick,
   toggles,
-  featureColors
+  featureColors,
 }) => {
   const formatScore = (score: number): string => {
     const percentage = (score * 100).toFixed(1);
@@ -31,20 +31,20 @@ const TrackCard: React.FC<TrackCardProps> = ({
   const handleCardClick = () => {
     setFlipped(!flipped);
     onClick();
+    console.log(similarityScore);
   };
 
-  const toggleLabels: {[key: string]:string} = {
-    "danceability": "Danceability",
-    "energy": "Energy",
-    "tempo":"Tempo",
-    "valence":"Emotions",
-    "speechiness": "Vocal presence",
+  const toggleLabels: { [key: string]: string } = {
+    danceability: "Danceability",
+    energy: "Energy",
+    tempo: "Tempo",
+    valence: "Emotions",
+    speechiness: "Vocal presence",
   };
 
   const trueToggles = Object.entries(toggles)
-  .filter(([_, value]) => value === true) // Filter for true values
-  .map(([key]) => key);
-
+    .filter(([_, value]) => value === true) // Filter for true values
+    .map(([key]) => key);
 
   return (
     <button
@@ -62,20 +62,28 @@ const TrackCard: React.FC<TrackCardProps> = ({
       {flipped ? (
         <div className="h-64 py-6 px-8 flex flex-col space-y-4 text-gray-900 dark:text-white">
           {similarityScore.slice(1).map((_, index) => (
-          <div className="flex flex-row space-x-4 items-start">
-            <div className="w-24 text-left -mt-1">
-              <p className="text-xs">{toggleLabels[trueToggles[index]]}</p>
-            </div>
-            <div className="w-full flex flex-col items-center space-y-1">
-              <div className="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
-              <div className={`${featureColors[trueToggles[index]]} h-2.5 rounded-full`} style={{ width: `${Math.floor(similarityScore[index] * 100)}%` }}
-              ></div>
+            <div className="flex flex-row space-x-4 items-start">
+              <div className="w-24 text-left -mt-1">
+                <p className="text-xs">{toggleLabels[trueToggles[index]]}</p>
               </div>
-              <div>
-              <p className="tracking-tight text-xs">{formatScore(similarityScore[index])}%</p>
+              <div className="w-full flex flex-col items-center space-y-1">
+                <div className="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
+                  <div
+                    className={`${
+                      featureColors[trueToggles[index]]
+                    } h-2.5 rounded-full`}
+                    style={{
+                      width: `${Math.floor(similarityScore[index + 1] * 100)}%`,
+                    }}
+                  ></div>
+                </div>
+                <div>
+                  <p className="tracking-tight text-xs">
+                    {formatScore(similarityScore[index + 1])}%
+                  </p>
+                </div>
               </div>
             </div>
-          </div>
           ))}
         </div>
       ) : (

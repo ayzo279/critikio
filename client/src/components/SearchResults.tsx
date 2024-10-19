@@ -159,26 +159,27 @@ const SearchResults: React.FC<SearchProps> = ({
         <div className="flex flex-wrap justify-center gap-8 p-4">
           {recommendations.length > 0 ? (
             recommendations.map((song, index) => (
-                <TrackCard
-                  key={index} // Use song id as the unique key
-                  trackTitle={song[0]} // Track title
-                  artistName={song[1]} // Artist name
-                  imageURL={song[3]} // Image URL
-                  similarityScore={song[2]} // Similarity score
-                  trackID={song[4]}
-                  onClick={()=>handleTrackClick(song[4])}
-                  toggles={toggles}
-                  featureColors={featureColors}
-                />
+              <TrackCard
+                key={index} // Use song id as the unique key
+                trackTitle={song[0]} // Track title
+                artistName={song[1]} // Artist name
+                imageURL={song[3]} // Image URL
+                similarityScore={song[2]} // Similarity score
+                trackID={song[4]}
+                onClick={() => handleTrackClick(song[4])}
+                toggles={toggles}
+                featureColors={featureColors}
+              />
             ))
           ) : (
             <div>No recommended songs available</div>
           )}
         </div>
-        {currentTrackUri && 
-        <div className="sticky w-1/2 bottom-0">
-          <SpotifyEmbed id={currentTrackUri} />
-          </div>}
+        {currentTrackUri && (
+          <div className="sticky w-1/2 bottom-0">
+            <SpotifyEmbed id={currentTrackUri} />
+          </div>
+        )}
       </div>
     </div>
   );
