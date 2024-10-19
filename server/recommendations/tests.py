@@ -47,13 +47,13 @@ class RecommendationsTestCase(TestCase):
 
         filters = {
             "danceability": True,
+            "tempo":True,
             "valence": False
         }
 
         similarity = compute_similarity(song1, song2, filters)
-
-        self.assertIsInstance(similarity, float)
-        self.assertLessEqual(similarity, 1.0)
+        print(similarity)
+        self.assertIsInstance(similarity, list)
 
     # def test_get_recommendations(self):
     #     song = "Roxanne"

@@ -49,17 +49,22 @@ def compute_similarity(song1, song2, filters: dict[str, bool], weight=2):
     for default_feature in defaults:
         dist += (song1[default_feature] - song2[default_feature]) ** 2
 
+    segmented_similarity = []
     # Include selected features based on filters, weighted more heavily for user preferences
+    # Compute individual similarities
     for feature in filters.keys():
         if filters[feature]:
             dist += weight * (song1[feature] - song2[feature]) ** 2
+            seg_dist = (song1[feature] - song2[feature]) ** 2
+            segmented_similarity.append(1 - np.sqrt(seg_dist))
+        
 
     dist = np.sqrt(dist)
 
     max_dist = np.sqrt(len(defaults) + sum(weight for feature in filters if filters[feature]))
 
     similarity = 1 - (dist/max_dist)
-    return similarity
+    return [similarity] + segmented_similarity
 
 
 def build_clusters(songs, filters, n_clusters=3):

@@ -163,7 +163,7 @@ def get_global_recs(song, artist, filters, count=5):
     
     rankings = {}
     recommendations = []
-    
+
     for track in global_features:
         rankings[track['id']] = compute_similarity(input_track_features, track, filters)
 
