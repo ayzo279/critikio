@@ -1,3 +1,7 @@
 /client/.env
 /server/.env
 /server/venv
+/server/.cache
+/server/harmonalyze/__pycache__
+/server/recommendations/__pycache__
+/server/clustering/__pycache__

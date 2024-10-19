@@ -1,5 +1,6 @@
 import time
 import numpy as np
+from sklearn.cluster import KMeans
 
 api_call_count = 0
 start_time = time.time()
@@ -59,3 +60,20 @@ def compute_similarity(song1, song2, filters: dict[str, bool], weight=2):
 
     similarity = 1 - (dist/max_dist)
     return similarity
+
+
+def build_clusters(songs, filters, n_clusters=3):
+    features = [feature for feature, active in filters.items() if active]
+
+    X = np.array([[song[feature] for feature in features] for song in songs])
+
+    kmeans = KMeans(n_clusters=n_clusters)
+    kmeans.fit(X)
+
+    labels = kmeans.labels_
+
+    clusters = [[] for _ in range(n_clusters)]
+    for i, label in enumerate(labels):
+        clusters[label].append(songs[i])
+
+    print(clusters)
