@@ -167,6 +167,8 @@ const SearchResults: React.FC<SearchProps> = ({
                   similarityScore={song[2]} // Similarity score
                   trackID={song[4]}
                   onClick={()=>handleTrackClick(song[4])}
+                  toggles={toggles}
+                  featureColors={featureColors}
                 />
             ))
           ) : (
