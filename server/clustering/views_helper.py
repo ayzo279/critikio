@@ -29,6 +29,9 @@ def rate_limited_api_call(func, *args, **kwargs):
 
 def build_clusters(songs, filters):
     n_clusters = max(len(songs)//10, 3)
+    defaults = ["tempo","acousticness","key","mode","liveness","loudness","time_signature"]
+    for feature in defaults:
+        filters[feature] = True
     features = [feature for feature, active in filters.items() if active]
 
     X = np.array([[song[feature] for feature in features] for song in songs])
