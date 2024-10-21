@@ -31,9 +31,6 @@ class ClusteringViewSet(viewsets.ModelViewSet):
         else:
             sampling_size = int(sampling_size)
 
-        print(sampling_size)
-        exit()
-        
         clusters = build_song_clusters(artists, filters, sampling_size)
         cluster_recs = Cluster(
             artists=artists,
