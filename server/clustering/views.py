@@ -24,7 +24,7 @@ class ClusteringViewSet(viewsets.ModelViewSet):
     @action(detail=False, methods=['post'])
     def process_cluster(self, request): 
         filters = request.data.get('toggles', {})
-        artists = request.data.get('badges', [])
+        artists = request.data.get('artists', [])
         sampling_size = request.data.get('samplingSize', "")
         if sampling_size == "all":
             sampling_size = 100
