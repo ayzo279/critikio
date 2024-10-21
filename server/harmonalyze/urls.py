@@ -5,15 +5,12 @@ from recommendations.views import RecommendationViewSet
 from clustering.views import ClusteringViewSet
 
 # Create routers for each app
-recommendation_router = DefaultRouter()
-recommendation_router.register(r'recommendations', RecommendationViewSet)
-
-clustering_router = DefaultRouter()
-clustering_router.register(r'clustering', ClusteringViewSet)
+router = DefaultRouter()
+router.register(r'recommendations', RecommendationViewSet)
+router.register(r'clustering', ClusteringViewSet)
 
 # Main URL patterns
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include(recommendation_router.urls)),  
-    path('', include(clustering_router.urls)), 
+    path('', include(router.urls)),  # Include the single router
 ]
