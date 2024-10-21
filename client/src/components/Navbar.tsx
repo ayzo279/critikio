@@ -1,10 +1,12 @@
 import React from "react";
-import { HomeIcon, LockClosedIcon } from "@heroicons/react/24/solid";
-import { useLocation } from "react-router-dom";
+import { HomeIcon, MusicalNoteIcon } from "@heroicons/react/24/solid";
+import { useLocation, Link } from "react-router-dom";
 import { signoutUser } from "../services/auth";
+import useTab from "../contexts/useTab";
 
 const Navbar: React.FC = () => {
   const location = useLocation();
+  const { activeTab, setActiveTab } = useTab();
 
   const handleSignOut = async () => {
     try {
@@ -22,49 +24,29 @@ const Navbar: React.FC = () => {
         <nav className="mt-10 w-full text-md text-white font-light">
           <ul className="space-y-4 px-1">
             <li>
-              <a
-                href="/home"
+              <Link
+                to="/home"
+                onClick={() => setActiveTab("home")}
                 className={`flex space-x-4 py-3 pl-8 rounded-xl ${
-                  location.pathname === "/home" ? "bg-blue-700" : ""
+                  activeTab === "home" ? "bg-blue-700" : ""
                 }`}
               >
                 <HomeIcon className="h-6 w-6 text-white" />
                 <span>Home</span>
-              </a>
+              </Link>
             </li>
             <li>
-              <a
-                href="#"
+              <Link
+                to="/home"
+                onClick={() => setActiveTab("trackmixer")}
                 className={`flex space-x-4 py-3 pl-8 rounded-xl ${
-                  location.pathname === "#" ? "bg-blue-700" : ""
+                  activeTab === "trackmixer" ? "bg-blue-700" : ""
                 }`}
               >
-                <LockClosedIcon className="h-6 w-6 text-white" />
-                <span>Coming Soon</span>
-              </a>
+                <MusicalNoteIcon className="h-6 w-6 text-white" />
+                <span>Track Mixer</span>
+              </Link>
             </li>
-            {/* <li>
-              <a
-                href="#"
-                className={`flex space-x-4 py-3 pl-8 rounded-xl ${
-                  location.pathname === "#" ? "bg-blue-700" : ""
-                }`}
-              >
-                <HomeIcon className="h-6 w-6 text-white" />
-                <span>Some tab</span>
-              </a>
-            </li>
-            <li>
-              <a
-                href="#"
-                className={`flex space-x-4 py-3 pl-8 rounded-xl ${
-                  location.pathname === "#" ? "bg-blue-700" : ""
-                }`}
-              >
-                <HomeIcon className="h-6 w-6 text-white" />
-                <span>Some tab</span>
-              </a>
-            </li> */}
           </ul>
         </nav>
         <button

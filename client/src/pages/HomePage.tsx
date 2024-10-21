@@ -1,24 +1,31 @@
 import React from "react";
 import Navbar from "../components/Navbar";
-import TrackCard from "../components/TrackCard";
 import MusicSearch from "../components/MusicSearch";
-import SpotifyEmbed from "../components/SpotifyEmbed";
-// import ToggleButton from "../components/ToggleButton";
+import TrackMixer from "../components/TrackMixer";
+
 import { TabProvider } from "../contexts/TabContext";
+import useTab from "../contexts/useTab";
+
 
 const HomePage: React.FC = () => {
   return (
     <TabProvider>
       <div className="flex h-screen p-10">
         <Navbar />
-        <div className="ml-64 flex-grow h-full">
-          <MusicSearch />
-          {/* <SpotifyEmbed/> */}
-        </div>
-        {/* <ToggleButton text="Danceability" /> */}
-        {/* <TrackCard trackTitle="Shape of You in the Stars (From the Vault) (Taylor's Version)" artistName="Ed Sheeran" imageURL="https://i.scdn.co/image/ab67616d0000b27383e9b06ccd219248b5301264" similarityScore={0.5}/> */}
+        <ActiveTabContent/>
       </div>
     </TabProvider>
+  );
+};
+
+const ActiveTabContent: React.FC = () => {
+  const { activeTab } = useTab();
+
+  return (
+    <div className="ml-64 flex-grow h-full">
+      {activeTab === "home" && <MusicSearch />}
+      {activeTab === "trackmixer" && <TrackMixer />}
+    </div>
   );
 };
 
