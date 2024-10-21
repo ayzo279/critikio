@@ -26,7 +26,7 @@ class ClusteringViewSet(viewsets.ModelViewSet):
         filters = request.data.get('toggles', {})
         artists = request.data.get('badges', [])
         sampling_size = request.data.get('samplingSize', "")
-        if sampling_size == "Any":
+        if sampling_size == "all":
             sampling_size = 100
         else:
             sampling_size = int(sampling_size)
