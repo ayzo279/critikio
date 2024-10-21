@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route, useNavigate } from "react-router-dom";
 import SigninPage from "./pages/SigninPage";
 import HomePage from "./pages/HomePage";
-import TrackMixerPage from "./pages/TrackMixerPage";
 import { getUserToken } from "./services/auth";
 
 const App: React.FC = () => {
