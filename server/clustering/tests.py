@@ -31,16 +31,17 @@ class ClusteringTestCase(TestCase):
     #     }
     #     clusters = build_clusters(songs, filters)
     #     assert(len(clusters) == 3)
+    #     print(clusters)
 
-    # def test_build_song_cluster(self):
-    #     artists=["Benson Boone", "Gracie Abrams"]
-    #     filters = {
-    #         "danceability": True,
-    #         "energy": False,
-    #         "tempo": True
-    #     }
-    #     clusters = build_song_clusters(artists, filters)
-    #     for cluster in clusters:
-    #         print(cluster)
-    #         print('\n')
+    def test_build_song_cluster(self):
+        artists=["Benson Boone", "Gracie Abrams"]
+        filters = {
+            "danceability": True,
+            "energy": False,
+            "tempo": True
+        }
+        clusters = build_song_clusters(artists, filters, 10)
+        for cluster in clusters:
+            print(cluster)
+            print('\n')
 

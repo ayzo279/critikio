@@ -1,6 +1,7 @@
 from django.shortcuts import render
 import spotipy
 import numpy as np
+import random
 from spotipy.oauth2 import SpotifyClientCredentials
 import os
 
@@ -24,12 +25,18 @@ class ClusteringViewSet(viewsets.ModelViewSet):
     def process_cluster(self, request): 
         filters = request.data.get('toggles', {})
         artists = request.data.get('badges', [])
+        sampling_size = request.data.get('samplingSize', "")
+        if sampling_size == "any":
+            sampling_size = 100
+        else:
+            sampling_size = int(sampling_size)
         
         clusters = build_song_clusters(artists, filters)
         cluster_recs = Cluster(
             artists=artists,
             toggles=filters,
-            clusters=clusters
+            clusters=clusters,
+            samplingSize = sampling_size
         )
         cluster_recs.save()
 
@@ -37,7 +44,7 @@ class ClusteringViewSet(viewsets.ModelViewSet):
 
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     
-def build_song_clusters(artists, filters):
+def build_song_clusters(artists, filters, sampling_size):
     client_id = os.getenv("SPOTIFY_CLIENT_ID")
     client_secret = os.getenv("SPOTIFY_CLIENT_SECRET")
     sp = spotipy.Spotify(auth_manager=SpotifyClientCredentials(client_id=client_id, client_secret=client_secret))
@@ -57,7 +64,10 @@ def build_song_clusters(artists, filters):
         for album in albums:
             album_id = album['id']
             tracks = rate_limited_api_call(sp.album_tracks, album_id)['items']
-            all_tracks.extend(tracks)
+            num_tracks_to_sample = min(len(tracks), max(1, sampling_size // len(albums))) if albums else 0
+            if num_tracks_to_sample > 0:
+                sampled_tracks = random.sample(tracks, num_tracks_to_sample)
+                all_tracks.extend(sampled_tracks)
 
     batched_tracks = batch_process(all_tracks)
     track_features = []

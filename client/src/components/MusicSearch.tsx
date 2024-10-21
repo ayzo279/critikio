@@ -3,11 +3,11 @@ import ToggleButton from "./ToggleButton";
 import SearchResults from "./SearchResults";
 
 const MusicSearch: React.FC = () => {
-  const [searchInput, setSearchInput] = useState("");
+  const [searchInput, setSearchInput] = useState<string>("");
   const [badges, setBadges] = useState<string[]>([]);
-  const [referenceTrack, setReferenceTrack] = useState("");
-  const [referenceArtist, setReferenceArtist] = useState("");
-  const [showResults, setShowResults] = useState(false); // State to track visibility of results
+  const [referenceTrack, setReferenceTrack] = useState<string>("");
+  const [referenceArtist, setReferenceArtist] = useState<string>("");
+  const [showResults, setShowResults] = useState<boolean>(false); // State to track visibility of results
 
   type ToggleKey =
     | "danceability"
@@ -32,13 +32,13 @@ const MusicSearch: React.FC = () => {
 
   const handleAddBadge = () => {
     if (searchInput && !badges.includes(searchInput)) {
-      setBadges([...badges, searchInput]);
+      setBadges((prevBadges) => [...prevBadges, searchInput]);
       setSearchInput("");
     }
   };
 
   const handleRemoveBadge = (badge: string) => {
-    setBadges(badges.filter((b) => b !== badge));
+    setBadges((prevBadges) => prevBadges.filter((b) => b !== badge));
   };
 
   const handleTrackChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -60,7 +60,7 @@ const MusicSearch: React.FC = () => {
     if (referenceTrack && referenceArtist) {
       setShowResults(true); // Show results when search button is clicked
     } else {
-      alert("Please fill out both the reference track and artist.")
+      alert("Please fill out both the reference track and artist.");
     }
   };
 
@@ -122,13 +122,15 @@ const MusicSearch: React.FC = () => {
                   text={label}
                   initialState={toggles[key]}
                   onToggle={() => handleToggle(key)}
-                  color="indigo" 
+                  color="indigo"
                 />
               ))}
             </div>
           </div>
           <div className="flex flex-col items-center space-y-4 pb-20 w-full">
-            <p className="text-lg italic">I want songs from these artists (optional)</p>
+            <p className="text-lg italic">
+              I want songs from these artists (optional)
+            </p>
             <div className="flex flex-row items-center justify-center w-full">
               <input
                 type="text"
