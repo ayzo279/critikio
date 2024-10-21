@@ -34,7 +34,7 @@ class ClusteringTestCase(TestCase):
     #     print(clusters)
 
     def test_build_song_cluster(self):
-        artists=["Benson Boone", "Gracie Abrams"]
+        artists=["benson boone"]
         filters = {
             "danceability": True,
             "energy": False,
@@ -44,4 +44,6 @@ class ClusteringTestCase(TestCase):
         for cluster in clusters:
             print(cluster)
             print('\n')
+
+
 
