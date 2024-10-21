@@ -6,7 +6,7 @@ from clustering.views import ClusteringViewSet
 
 # Create routers for each app
 router = DefaultRouter()
-router.register(r'recommendations', RecommendationViewSet)
+router.register(r'recommendation', RecommendationViewSet)
 router.register(r'clustering', ClusteringViewSet)
 
 # Main URL patterns
