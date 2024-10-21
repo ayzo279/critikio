@@ -26,12 +26,12 @@ class ClusteringViewSet(viewsets.ModelViewSet):
         filters = request.data.get('toggles', {})
         artists = request.data.get('badges', [])
         sampling_size = request.data.get('samplingSize', "")
-        if sampling_size == "any":
+        if sampling_size == "Any":
             sampling_size = 100
         else:
             sampling_size = int(sampling_size)
         
-        clusters = build_song_clusters(artists, filters)
+        clusters = build_song_clusters(artists, filters, sampling_size)
         cluster_recs = Cluster(
             artists=artists,
             toggles=filters,
