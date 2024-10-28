@@ -90,7 +90,7 @@ def build_song_clusters(artists, filters, sampling_size):
             if track['name'] in dupe_checker:
                 continue
             else:
-                cluster_tracks.append([track['name'], track]['artists'][0]['name'], track['album']['images'][0]['url'])
+                cluster_tracks.append(track['id'], track['name'], track]['artists'][0]['name'], track['album']['images'][0]['url'])
                 dupe_checker.add(track['name'])
             
         final_clusters.append(cluster_tracks)
