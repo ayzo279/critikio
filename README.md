@@ -23,7 +23,7 @@
     </ul>
   </li>
   <li>
-    Choose an artist(s) you want the results to pick from. 
+    Choose an artist(s) you want the results to pick from. Otherwise, proceed to next step to generate similar songs from current global hits.
   </li>
   <li>
     Click "Search" and the algorithm will produce 5 songs that are similar to your reference song based on the selected criteria.
