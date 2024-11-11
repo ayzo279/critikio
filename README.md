@@ -4,7 +4,7 @@
 ## How to use
 <ol>
   <li>
-    Go to https://harmonalyze-site.onrender.com.
+    Go to https://harmonalyze-site.onrender.com. (Server may take up to a minute to reboot)
   </li>
   <li>
     Create an account and navigate to the homepage.
@@ -33,6 +33,5 @@
 ## Features in-development (stay tuned!)
 <ul>
   <li> **Exploration history** Users will be able to save their explorations to a repository accessable from the sidebar for view later.</li>
-  <li> **Open discovery** An alternative button option will be added to allow for free explorations of current hits instead of requiring target artists. Listen to artists you may not have heard from before.</li>
   <li> **Song data analysis** Compare the features of songs side by side to understand their similarities and differences. Explore the track-by-track, album-by-album feature variations from individual artists.</li>
 </ul>
