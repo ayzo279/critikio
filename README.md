@@ -1,3 +1,5 @@
+*UPDATE* Spotify Web API has deprecated its audio features endpoint, rendering harmonalyze's core functionality obsolete. :(
+
 # Harmonalyze (WIP)
 ### A music discovery platform. Find similar songs from your favorite artist based on what you're listening to now.
 
